@@ -1,0 +1,188 @@
+/*#controls{
+    width: 100%;
+    height: 100%;
+}
+*/
+#questionControl{
+    position: absolute;
+    top:0;
+    background: blue;
+    width: 100%;
+   
+}
+
+#questionControl .nextQuestion{
+    position: absolute;
+    right: 0;
+    margin: 10px;
+}
+
+#questionControl .prevQuestion{
+    position: absolute;
+    left: 0;
+    margin: 10px;
+}
+
+#controls{
+    position: relative;
+    padding-top: 50px;
+    /* padding-left: 20%; */
+    /* padding-bottom: 5%; */
+    /* background: pink; */
+    /* border: solid; */
+    width: 60%;
+    border: dotted dodgerblue 1px;
+    border-bottom-left-radius: 10px;
+
+}
+
+/* #controls div{
+    display: none;
+} */
+
+#controls .input_yes_no{
+    display: none;
+}
+
+#controls .input_multi{
+    display: none;
+}
+
+#controls .input_radio{
+    display: none;
+}
+
+#controls .input_dropdown{
+    display: none;
+}
+
+#controls .input_small{
+    display: none;
+}
+
+#controls .input_big{
+    display: none;
+}
+
+#controls .next{
+    display: none;
+}
+
+#controls .question{
+/*     background: red; */
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#controls .options{
+    text-align: left;
+    width: 20%;
+    padding-left: 15px;
+    margin: 0 auto;
+}
+
+#controls .input_small .options{
+    text-align: center;
+}
+
+#controls .input_radio .options{
+    text-align: left;
+}
+
+#controls .options div{
+    margin: 10px; 
+}
+
+.nextButton{
+    width: 10%;
+    height: 100%;
+    background: red;
+    position: absolute;
+    right: 0;
+}
+
+
+.prevButton{
+    width: 10%;
+    height: 100%;
+    background: blue;
+    position: absolute;
+    left: 0;
+    text-align: center;
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.header{
+    background-color: #1e90ff52;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    font-size: 30px;
+    width: 60%;
+    border-top-left-radius: 20px;
+}
+
+
+#quesLabel{
+    padding: 30px;
+    border: 15px;
+}
+
+.workspace{
+    /* margin: 0 auto; */
+    margin-top: 15%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.nextQuestion{
+    text-align: right;
+    margin: 5px;
+    display: none;
+}
+
+.nextQuestion button{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#flowChart{
+    display: none;
+}
+
+#flowChartSVG{
+    position: relative;
+    /* padding-top: 10%; */
+    /* padding-bottom: 10%; */
+    overflow-x: scroll;
+    overflow-y: scroll;
+    width: 80%;
+    margin: 0 auto;
+    padding-bottom: 150px;
+}
+
+.questionGroup{
+    position: absolute;
+    text-align: left;
+    padding: 10px;
+    top: 0;
+    width: 100%;
+}
+
+.questionTag{
+    display: inline-block;
+    padding: 10px;
+}
+
+.questionTagSelected{
+    /* border: dotted dodgerblue 1px;
+    border-top-left-radius: 20px; */
+
+    border-bottom: dotted dodgerblue 1px;
+    border-radius: 20px;
+}

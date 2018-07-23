@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Demo page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <style>
+    
+    #chatbox .textarea {
+      width: 90%;
+      height: 90%;
+      margin-right: 10px;
+      resize: none;
+      padding-top: 50px;
+      padding-left: 20px;
+      overflow-y: scroll;
+      position: relative;
+    }
+
+    #chatbox .textarea .clear{
+      clear: both;
+    }
+
+    #chatbox .textarea .from{
+      width: 50%;
+      float: left;
+      background: pink;
+      clear: both;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+    }
+
+    #chatbox .textarea .to{
+      width: 50%;
+      float: right;
+      background: orange;
+      clear: both;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      
+    }
+
+    #chatbox {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      
+      /* background: #00000008; */
+    }
+
+    #chatbox .control{
+      width: 90%;
+      position: relative;
+    }
+
+    #chatbox .control .input{
+      width: 78%;
+    }
+    #chatbox .control .enter{
+      position: absolute;
+      width: 18%;
+      right: 0;
+    }
+    </style>
+
+
+  </head>
+  <body>
+    <div id="chart">
+
+st=>start: Start:>
+e=>end: End :>
+e1=>end: End :>
+
+starttheprocess-followup=>operation: starttheprocess-followup
+
+taxpayee-no-followup=>operation: taxpayee-no-followup
+taxpayee-yes-followup=>operation: taxpayee-yes-followup 
+
+ownhosue-no-context=>operation: ownhosue-no-context  
+ownhosue-yes-context=>operation: ownhosue-yes-context  
+
+filereturn-yes-followup=>operation: filereturn-yes-followup  
+filereturn-no-followup=>operation: filereturn-no-followup  
+
+taxpayee=>condition: Tax payee?
+
+filereturn=>condition: File return?
+
+ownhouse=>condition: Own house?
+
+st->starttheprocess-followup->taxpayee
+
+
+taxpayee(yes)->taxpayee-yes-followup
+taxpayee(no)->taxpayee-no-followup
+
+taxpayee-no-followup->ownhouse
+taxpayee-yes-followup->filereturn
+
+ownhouse(yes)->e
+ownhouse(no)->e
+
+filereturn(yes)->e
+filereturn(no)->e
+
+    </div>
+
+    <div id="colorChart" style="display:none">
+
+    </div>
+
+    <div id="hiddenControls">
+
+    </div>
+
+    <div id="chatbox">
+        <div class="textarea">
+            <div class="clear"></div>
+        </div>
+        <div class="control">
+          <input type="text" class="input" /> <input type="button" value="enter" class="enter" onclick="makeRestCall()"/>
+        </div>
+    </div>
+
+		<script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="/node_modules/raphael/raphael.js"></script>
+    <script src="/release/flowchart.js"></script>
+    
+		<script>
+
+    var sessionId = Math.round(Math.random()*97676567549845769849);
+      
+    var intentId = "99cffd2d-f5bd-40dd-aad2-045bf2cf77d6";
+
+    $('#chart').flowChart();
+    
+    function makeRestCall(){
+
+      var text = $("#chatbox .input").val();
+      
+      if(text != '')
+        $("#chatbox .textarea").append("<div class='to'>"+text+"</div>");
+
+      //make ajax call//
+
+      $.ajax({url: "http://localhost:8000/dialogflow2?q="+text+"&sessionId="+sessionId, success: function(result){
+          //$("#div1").html(result);
+
+        //build UI based on the type
+
+        $("#chatbox .textarea").append("<div class='from'>"+result.next.question+"</div>");//<div>"+JSON.stringify(result)+"</div>");
+
+        var t_action = result.action;
+        //get the flow chart from the service
+        $.ajax({url: "http://localhost:8000/generateFlowChart?intentId="+intentId+"&sessionId="+sessionId, success: function(result){
+
+          var newCharet = result.chart;
+          //highlight the current flow with current action
+          var highlight = t_action.replace(new RegExp('-no','g'), '').replace(new RegExp('-yes','g'), '').replace(new RegExp('\\.','g'),'({"stroke":"Red"})@>');
+          highlight += '({"stroke":"Red"})';
+          console.log("color hightlight "+highlight);
+
+          newCharet += highlight;
+
+          $("#chart").html(newCharet);
+          $("#chart").flowChart();
+
+        }});
+
+
+
+        
+      }});
+      //make ajax call//
+      
+
+    }
+    </script>
+    
+
+    <script>
+
+
+      t="st=>start: Start:>\n"+
+"e=>end: End :>\n"+
+"e1=>end: End :>\n"+
+"starttheprocess-followup=>operation: starttheprocess-followup\n"+
+"taxpayee-no-followup=>operation: taxpayee-no-followup\n"+
+"taxpayee-yes-followup=>operation: taxpayee-yes-followup \n"+
+"ownhosue-no-context=>operation: ownhosue-no-context  \n"+
+"ownhosue-yes-context=>operation: ownhosue-yes-context  \n"+
+"filereturn-yes-followup=>operation: filereturn-yes-followup  \n"+
+"filereturn-no-followup=>operation: filereturn-no-followup  \n"+
+"taxpayee=>condition: Tax payee?\n"+
+"filereturn=>condition: File return?\n"+
+"ownhouse=>condition: Own house?\n"+
+"st->starttheprocess-followup->taxpayee\n"+
+"taxpayee(yes)->taxpayee-yes-followup\n"+
+"taxpayee(no)->taxpayee-no-followup\n"+
+"taxpayee-no-followup->ownhouse\n"+
+"taxpayee-yes-followup->filereturn\n"+
+"ownhouse(yes)->e\n"+
+"ownhouse(no)->e\n"+
+"filereturn(yes)->e\n"+
+"filereturn(no)->e";
+
+  var diagram = flowchart.parse(t);
+
+  // you can also try to pass options:
+
+  diagram.drawSVG('colorChart', {
+                              'x': 0,
+                              'y': 0,
+                              'line-width': 3,
+                              'line-length': 50,
+                              'text-margin': 10,
+                              'font-size': 14,
+                              'font-color': 'black',
+                              'line-color': 'black',
+                              'element-color': 'black',
+                              'fill': 'white',
+                              'yes-text': 'yes',
+                              'no-text': 'no',
+                              'arrow-end': 'block',
+                              'scale': 1,
+                              // style symbol types
+                              'symbols': {
+                                'start': {
+                                  'font-color': 'red',
+                                  'element-color': 'green',
+                                  'fill': 'yellow'
+                                },
+                                'end':{
+                                  'class': 'end-element'
+                                }
+                              },
+                              // even flowstate support ;-)
+                              'flowstate' : {
+                                'past' : { 'fill' : '#CCCCCC', 'font-size' : 12},
+                                'current' : {'fill' : 'yellow', 'font-color' : 'red', 'font-weight' : 'bold'},
+                                'future' : { 'fill' : '#FFFF99'},
+                                'request' : { 'fill' : 'blue'},
+                                'invalid': {'fill' : '#444444'},
+                                'approved' : { 'fill' : '#58C4A3', 'font-size' : 12, 'yes-text' : 'APPROVED', 'no-text' : 'n/a' },
+                                'rejected' : { 'fill' : '#C45879', 'font-size' : 12, 'yes-text' : 'n/a', 'no-text' : 'REJECTED' }
+                              }
+                            });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Questions</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <link rel="stylesheet" type="text/css" href="questions.css">
+    <link rel="stylesheet" type="text/css" href="common.css">
+
+  </head>
+  <body>
+
+    <div id="controls">
+       
+        <div class="input_yes_no">
+
+            <div class="question">
+                <label> question </label>
+            </div>
+
+            <div class="options">
+
+                <div class="yes">
+                    <input class="w3-radio" type="radio" name="answer" value="yes" checked />
+                    <label>Yes</label>
+                </div>
+                
+                <div class="no">
+                    <input class="w3-radio" type="radio" name="answer" value="no" />
+                    <label>No</label>
+                </div>
+
+            </div>
+       </div> 
+
+       <div class = "input_multi">
+
+            <div class="question">
+                <label> question </label>
+            </div>
+            
+
+            <div class="options">
+                
+                <div>
+                    <input class="w3-check" type="checkbox" checked="checked" value=""/> 
+                    <label>Milk</label>
+                </div>
+                <div>
+                        <input class="w3-check" type="checkbox" checked="checked" /> 
+                        <label>Milk</label>
+                </div>
+                <div>
+                        <input class="w3-check" type="checkbox" checked="checked" /> 
+                        <label>Milk</label>
+                </div>                
+                <div>
+                        <input class="w3-check" type="checkbox" checked="checked" /> 
+                        <label>Milk</label>
+                </div>                
+                <div>
+                        <input class="w3-check" type="checkbox" checked="checked" /> 
+                        <label>Milk</label>
+                </div>                
+            </div>
+       </div>
+
+       <div class="input_radio">
+
+            <div class="question">
+                <label> question </label>
+            </div>
+                
+            <div class="options">
+                     
+
+            </div>
+
+       </div>
+
+       <div class ="input_dropdown">
+
+            <div class="question">
+                <label> question </label>
+            </div>
+        
+            <div class="options">
+                <select class="w3-select" name="option">
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+            </div>
+
+       </div>
+
+       <div class="input_small">
+
+            <div class="question">
+                <label> question </label>
+            </div>            
+
+            <div class="options">
+                <input class="w3-input" name="answer" type="text" />
+            </div>
+
+       </div>
+
+       <div class="input_big">
+            
+            <div class="question">
+                <label> question </label>
+            </div>            
+    
+            <div class="options">
+                <textarea rows="4" cols="50">
+
+                </textarea>
+            </div>
+
+       </div>
+
+       <div class="next">
+            <div class="question">
+                <label> Continue </label>
+            </div>            
+        
+            <div class="options">
+                <input type="button" value="continue" />
+            </div>
+       </div>
+
+    </div>
+
+    <div class="nextButton" onclick="nextQuestion()">
+        
+    </div>
+ 
+    <div class="prevButton" onclick="prevQuestion()">
+        
+    </div>
+
+
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+
+    <script src="questions.js"></script>
+    <script type="text/javascript" src="mxClient.js"></script>
+    <script type="text/javascript" src="flowChart.js"></script>
+
+    <script>
+        initialize();
+    </script>
+
+  </body>
+</html>

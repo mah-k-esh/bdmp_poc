@@ -1,0 +1,126 @@
+#controls{
+    width: 100%;
+    height: 100%;
+}
+
+#questionControl{
+    position: absolute;
+    top:0;
+    background: blue;
+    width: 100%;
+   
+}
+
+#questionControl .nextQuestion{
+    position: absolute;
+    right: 0;
+    margin: 10px;
+}
+
+#questionControl .prevQuestion{
+    position: absolute;
+    left: 0;
+    margin: 10px;
+}
+
+#controls{
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 60%;
+/*     background: pink; */
+}
+
+/* #controls div{
+    display: none;
+} */
+
+#controls .input_yes_no{
+    display: none;
+}
+
+#controls .input_multi{
+    display: none;
+}
+
+#controls .input_radio{
+    display: none;
+}
+
+#controls .input_dropdown{
+    display: none;
+}
+
+#controls .input_small{
+    display: none;
+}
+
+#controls .input_big{
+    display: none;
+}
+
+#controls .next{
+    display: none;
+}
+
+#controls .question{
+/*     background: red; */
+    width: 100%;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#controls .options{
+    overflow-y: scroll;
+    text-align: center;
+    margin-left: 50px;
+    margin: 0;
+}
+
+#controls .options div{
+    padding: 20px;
+    width: 100px;
+    height: 100px;
+    float: left;
+    top: 45%;
+    left: 45%;
+    margin: 0;
+/*     background: pink; */
+
+}
+
+.nextButton{
+    width: 10%;
+    height: 100%;
+    background: red;
+    position: absolute;
+    right: 0;
+}
+
+
+.prevButton{
+    width: 10%;
+    height: 100%;
+    background: blue;
+    position: absolute;
+    left: 0;
+    text-align: center;
+}
+
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+header{
+    background-color: grey;
+    padding: 15px;
+    font-size: 30px;
+}
+
+section{
+    height: 600px;
+}

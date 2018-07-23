@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Questions</title>
+    <link rel="stylesheet" type="text/css" href="questions-new.css">
+    <script src="/node_modules/jquery/dist/jquery.js"></script>
+    <script src="question-new.js"></script>
+    <script src="flowchart.js"></script>
+    <script type="text/javascript" src="mxClient.js"></script>
+    <link rel="stylesheet" type="text/css" href="common.css">
+    <script>
+        initialize();
+    </script>
+</head>
+
+<body>
+
+    <div class="workspace">
+        <div class="center header">
+            <div class="title">BMDP POC</div>
+        </div>
+        
+        <div id="controls" class="center">
+            
+            <div class="questionGroup">
+                <div class="questionTag" name="Create PO">
+                    Create PO
+                </div>
+                <div class="questionTag" name="Approve PO">
+                    Approve PO
+                </div>
+                <div class="questionTag" name="Send PO">
+                    Send PO
+                </div>
+            </div>
+            <div id="textData">
+                <div class="question">
+                            <div id="questionText"></div>
+                </div>
+                <div class="input_radio">
+                        <div class="options">
+
+                        </div>
+                </div>
+                <div class="input_small">
+                        <div class="options">
+                            <input class="w3-input" name="answer" type="text" />
+                        </div>
+                </div>
+           </div>
+
+           <div id="flowChart">
+                <div class="title">Process FlowChart</div>
+                <div id="flowChartSVG">
+
+                </div>
+           </div>
+       
+           <div class="nextQuestion">
+               <button onclick="nextQuestion()" id="testButton" >Next</button>
+            </div>
+
+        </div>
+    
+        <div class="center footer">
+            <p>&copy; 2018 Sirius</p>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
