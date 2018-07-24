@@ -92,7 +92,7 @@ function initialize(){
     }
     
     if(init.query != "")
-    $.ajax({url: "http://bdmp-poc.herokuapp.com/dialogflow2?"+queryString, 
+    $.ajax({url: "https://bdmp-poc.herokuapp.com/dialogflow2?"+queryString, 
             success: function(result){
 
                 var queOptions = ["input_yes_no","input_multi","input_radio","input_small","input_big","input_dropdown","next"];
