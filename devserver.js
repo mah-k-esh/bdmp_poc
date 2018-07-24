@@ -5,7 +5,7 @@ var config = require('./webpack.config');
 var Request = require("request");
 var q = require('q');
 
-var port = 8000;
+var port = 3000;
 var app = express();
 var compiler = webpack(config);
 
