@@ -1,6 +1,6 @@
 {
-  "author": "makesh ",
-  "name": "bdmppoc",
+  "author": "makesh kumar",
+  "name": "bdmp_poc",
   "version": "1.11.3",
   "main": "./index",
   "private": false,
@@ -25,12 +25,11 @@
   "scripts": {
     "init": "git submodule init && git submodule update && git submodule status",
     "start": "node devserver.js",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "npm run lint"
   },
   "repository": {
-
   },
   "keywords": [
-
   ]
 }

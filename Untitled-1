@@ -1,0 +1,50 @@
+
+var nodeInit = [];
+var mapping = [];
+var mapOfNodes = {};
+
+var chartString = "";
+
+for(i=0;i<t.length;i++){
+    
+    var sp = t[i].replace(new RegExp('-no','g'), '(no)').replace(new RegExp('-yes','g'), '(yes)').replace(new RegExp('\\.','g'),'->');
+    console.log(sp);
+	
+    mapping.push(sp);
+
+    var splited = t[i].split(".");
+	for(j=0;j<splited.length;j++){
+
+        var regSplited = splited[j].replace(new RegExp('-no','g'), '').replace(new RegExp('-yes','g'), '');
+
+		if(mapOfNodes[regSplited] == undefined){
+			mapOfNodes[regSplited] = "1";
+            
+            var type = "";
+
+            if(regSplited.trim() == "start"){
+                type = "start";
+            }else if(regSplited.trim() == "end"){
+                type = "end";
+            }else if(splited[j].indexOf("-no") != -1 || splited[j].indexOf("-yes") != -1){
+                type = "condition";
+            }else{
+                type="operation";
+            }
+
+            nodeInit.push(regSplited+'=>'+type+': '+regSplited);
+		}
+    }
+}
+
+for(i=0;i<nodeInit.length;i++){
+    chartString += nodeInit[i]+"\n"
+}
+
+for(i=0;i<mapping.length;i++){
+    chartString += mapping[i]+"\n";
+}
+
+
+
+replace(new RegExp('-no','g'), '(no)').replace(new RegExp('-yes','g'), '(yes)').replace(new RegExp('\\.','g'),'->');
