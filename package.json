@@ -9,12 +9,10 @@
   },
   "dependencies": {
     "json-mapper": "0.0.12",
-    "raphael": "2.2.7"
-  },
-  "devDependencies": {
+    "raphael": "2.2.7",
     "eslint": "^1.10.3",
     "eslint-config-defaults": "^8.0.2",
-    "express": ">= 0.0.1",
+    "express": "^4.16.3",
     "jquery": "^2.2.0",
     "lodash": ">=0.2.1",
     "moment": "^2.11.1",
@@ -22,14 +20,13 @@
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0"
   },
+  "devDependencies": {},
   "scripts": {
     "init": "git submodule init && git submodule update && git submodule status",
     "start": "node devserver.js",
     "lint": "eslint src",
     "test": "npm run lint"
   },
-  "repository": {
-  },
-  "keywords": [
-  ]
+  "repository": {},
+  "keywords": []
 }
