@@ -150,7 +150,7 @@ filereturn(no)->e
 
       //make ajax call//
 
-      $.ajax({url: "http://localhost:8000/dialogflow2?q="+text+"&sessionId="+sessionId, success: function(result){
+      $.ajax({url: "http://bdmp-poc.herokuapp.com/dialogflow2?q="+text+"&sessionId="+sessionId, success: function(result){
           //$("#div1").html(result);
 
         //build UI based on the type
@@ -159,7 +159,7 @@ filereturn(no)->e
 
         var t_action = result.action;
         //get the flow chart from the service
-        $.ajax({url: "http://localhost:8000/generateFlowChart?intentId="+intentId+"&sessionId="+sessionId, success: function(result){
+        $.ajax({url: "http://bdmp-poc.herokuapp.com/generateFlowChart?intentId="+intentId+"&sessionId="+sessionId, success: function(result){
 
           var newCharet = result.chart;
           //highlight the current flow with current action

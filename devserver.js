@@ -4,6 +4,7 @@ var webpack = require('webpack');
 var config = require('./webpack.config');
 var Request = require("request");
 var q = require('q');
+const queryString = require('query-string');
 
 var port = 3000;
 var app = express();
@@ -42,6 +43,7 @@ function getDialogFlowResponse(query){
 	console.log("query: "+query);
 
 	//make rest call here//
+
 
 	const options = {  
 		url: "https://api.dialogflow.com/v1/query?v=20150910&lang=en&query="+query+"&sessionId="+sessionId,
@@ -214,14 +216,19 @@ app.get("/dialogFlow2",function(req,res){
 		sessionId = req.query.sessionId;
 	}
 
-	var query = req.query.q;
+	req.query.query = req.query.q;
+	req.query.q = undefined;
 
-	console.log("query: "+query);
+	const stringified = queryString.stringify(req.query);
 
+	console.log("URL: URL: "+stringified);
+
+	var url_ = "https://api.dialogflow.com/v1/query?v=20150910&lang=en&"+stringified;
+	console.log("URL is URL: "+url_);
 	//make rest call here//
 
 	const options = {  
-		url: "https://api.dialogflow.com/v1/query?v=20150910&lang=en&query="+query+"&sessionId="+sessionId,
+		url: url_,
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json',
