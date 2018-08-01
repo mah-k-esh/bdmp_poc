@@ -1,6 +1,6 @@
 var data = {};
 
-var init = {"query": "start tax process","contexts":"","flowchart_data" : {},"context_type" : ""};
+var init = {"query": "start tax process","context":"","flowchart_data" : [{"name":"start","child":[]}],"context_type" : "","tempData":{}};
 
 var currentType = "";
 
@@ -8,13 +8,13 @@ var sessionId = Math.round(Math.random()*97676567549845769849);
 
 function fetchQuestion(query){
  
-    //console.log("fetchQuestion");
+    console.log("fetchQuestion");
 
 }
 
 function nextQuestion(){
     
-    //console.log("nextQuestion");
+    console.log("nextQuestion");
     
     if(currentType == "input_yes_no"){
 
@@ -61,85 +61,74 @@ function nextQuestion(){
     }
 
     //Construct JSON for Flowchat
-    // var ques = $("#controls .question #questionText").html() ;
-    // var quesAns = ques + ":" +  init.query;
-    // var contextType = init.context_type ;
+    var ques = $("#controls .question #questionText").html() ;
+    var quesAns = ques + ":" +  init.query;
+    var contextType = init.context_type ;
 
-    // console.log("isValid: check"+ init.isValid);
 
-    // if(init.isValid){
-    //     if(init.flowchart_data.hasOwnProperty(contextType)){
-    //         init.flowchart_data[contextType].push(quesAns);
-    //     }
-    //     else{
-    //         init.flowchart_data[contextType] = [quesAns];
-    //     }
-    // }
+    var node = {
+        "name": contextType,
+        "child": []
+    };
+
+
+    if(init.tempData[contextType] != null || init.tempData[contextType] != undefined){
+        
+        var childNode = {
+            "name": quesAns,
+            "child": []
+        };
+
+        //here im adding each node as child of previous node
+        var trav = init.tempData[contextType];
+
+        while(trav["child"].length != 0){
+            trav = trav["child"][0];
+        }
+
+        trav["child"][trav["child"].length] = childNode;
+    }
+    else{
+        init.flowchart_data[init.flowchart_data.length] = node;
+        init.tempData[contextType] = node;
+    }
+
+    console.log(init.flowchart_data);
 
 }
 
 function prevQuestion(){
     
-    //console.log("previousQuesiton");
+    console.log("previousQuesiton");
 
 }
 
 function initialize(){
 
     var queryString = "q="+init.query+"&sessionId="+sessionId;
-    if (init.contexts != "") { 
-        queryString = queryString + init.contexts;
+    if (init.context != "") { 
+        queryString = queryString + init.context;
     }
     
-    if(init.query != "")
-    $.ajax({url: "https://bdmp-poc.herokuapp.com/dialogflow2?"+queryString, 
+
+    $.ajax({url: "http://localhost:8000/dialogflow2?"+queryString, 
             success: function(result){
 
+                //main(init.flowchart_data);
                 var queOptions = ["input_yes_no","input_multi","input_radio","input_small","input_big","input_dropdown","next"];
 
-                //console.log("Data: "+JSON.stringify(result));
+                console.log("Data: "+JSON.stringify(result));
 
-                //console.log("type is: "+result.next.type);
-                //console.log("question is: "+result.next.question);
-                //console.log("context is: "+result.context);
-                //console.log("context type is: "+result.next.context_type);
-                //console.log("context desc is: "+result.next.context_desc);
+                console.log("type is: "+result.next.type);
+                console.log("question is: "+result.next.question);
+                console.log("context is: "+result.context);
+                console.log("context type is: "+result.next.context_type);
+                console.log("context desc is: "+result.next.context_desc);
 
-
-                if(result.next.type =='' || result.next.type == undefined ){
-                    //console.log("im returing");
-                    //clear the text field
-                    try{
-                        //clear the input
-                        $("#controls .options input").val("");
-                    }catch(err){
-                        //console.log("clear input error occurs");
-                    }
-                    init.isValid = false;
-                    return false;   //query is invalid so stop proceeding further
-                }
-
-                var ques = $("#controls .question #questionText").html() ;
-                var quesAns = ques + ":" +  init.query;
-                var contextType = init.context_type ;
-            
-                //console.log("isValid: check"+ init.isValid);            
-                
-                if(contextType != ""){
-                    if(init.flowchart_data.hasOwnProperty(contextType)){
-                        init.flowchart_data[contextType].push(quesAns);
-                    }
-                    else{
-                        init.flowchart_data[contextType] = [quesAns];
-                    }
-                }
-
-
-                //console.log("DEBUG: heal the world");
 
                 var selected = result.next.context_desc;
                 $(".questionTag").each(function(index){
-                    //console.log($(this).attr("name")+"--"+$(this).attr("class"));
+                    console.log($(this).attr("name")+"--"+$(this).attr("class"));
                     if($(this).attr("name") == selected){
                         $(this).attr("class",$(this).attr("class")+" questionTagSelected");
                     }else{
@@ -147,11 +136,14 @@ function initialize(){
                     }
                 })
 
-                if(result.next.type == "end"){
+                if(result.next.question == ""){
                     // Clear the entire DOM and say 
                     $("#flowChartSVG").html('');
                     $("#flowChartSVG").css('overflow:hidden;position:relative;width:600px;height:300px;cursor:default;');
-                    main(init.flowchart_data);
+
+                    init.flowchart_data[init.flowchart_data.length] = {"name":"end","child":[]};
+
+                    mainNew(init.flowchart_data);
                 }
                 
                 else{
@@ -160,12 +152,12 @@ function initialize(){
                 var contextDesc = result.next.context_desc;
 
                 init.query = "";
-                init.contexts = "";
+                init.context = "";
                 init.context_type = contextType;
 
 
                 for(itr=0; itr<contextArr.length; itr++){
-                    init.contexts = init.contexts + "&contexts=" + contextArr[itr];
+                    init.context = init.context + "&context=" + contextArr[itr];
                 }
 
 
@@ -182,9 +174,6 @@ function initialize(){
                 }
 
                 
-                //update the flow chart///
-                
-                //update the flow chart///
 
                 $("#controls .question #questionText").html(result.next.question);
 
@@ -260,7 +249,6 @@ function initialize(){
 
             }
                 //$("#controls ."+result.next.type+" .options").html(result.next.options);
-                return true;
 
             }
     });
