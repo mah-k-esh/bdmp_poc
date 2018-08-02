@@ -111,7 +111,7 @@ function initialize(){
     }
     
 
-    $.ajax({url: "http://localhost:8000/dialogflow2?"+queryString, 
+    $.ajax({url: "https://bdmp-poc.herokuapp.com/dialogflow2?"+queryString, 
             success: function(result){
 
                 //main(init.flowchart_data);
