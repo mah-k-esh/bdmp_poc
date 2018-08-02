@@ -11,7 +11,7 @@
     "eslint": "^1.10.3",
     "eslint-config-defaults": "^8.0.2",
     "express": "^4.16.3",
-    "jquery": "^2.2.0",
+    "jquery": "^3.3.1",
     "json-mapper": "0.0.12",
     "lodash": ">=0.2.1",
     "moment": "^2.11.1",
