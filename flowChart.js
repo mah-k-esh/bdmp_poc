@@ -1,4 +1,19 @@
 var graph;
+var outln;
+
+function zoomIn(){
+	graph.zoomIn();
+}
+
+function zoomOut(){
+	graph.zoomOut();
+}
+
+function zoomFit(){
+	// $("#flowChartSVG").css("width",$("#flowChartScroll").css("width"));
+	// $("#flowChartSVG").css("height",$("#flowChartScroll").css("height"));
+	graph.fit();
+}
 
 function main(flowChartJSON){
 
@@ -124,15 +139,26 @@ function mainNew(data){
 
     if(graph != null){
         graph.destroy();
-    }
+	}
+	
+	if(outln != null){
+		$("#outline").html("");
+	}
 
 	graph = createGraph(container);
 
     globalX=1,globalY=1;
 
     var parent = graph.getDefaultParent();
-    graph.getModel().beginUpdate();
-    
+	graph.getModel().beginUpdate();
+	
+
+	//swimlanes//
+	graph.insertVertex(parent, "firstSwim", "first", 0,0, 1000, 1000,'shape=swimlane;');
+    graph.insertVertex(graph.getModel().cells["firstSwim"], "secondSwim", "second", 0,0, 250, 500,'shape=swimlane;');
+    graph.insertVertex(graph.getModel().cells["firstSwim"], "thirdSwim", "third", 0,500, 250, 500,'shape=swimlane;');
+	//swimlanes//
+
     nodesForEdge = [];
 
     function recursiveNode(nodeArray,depth){
@@ -145,13 +171,30 @@ function mainNew(data){
 				
 				var t_width=180,t_height=50;
 				var v_width = 180,v_height=50;
-				nodeStyle = "";
-				if(nodeArray[node].name == "start" || nodeArray[node].name == "end"){
-					nodeStyle = "shape=ellipse;"
+				nodeStyle = "process";
+				if(nodeArray[node].name == "start"){
+					nodeStyle = "state"
+					v_width = v_height; 
+				}else if(nodeArray[node].name == "end"){
+					nodeStyle = "end"
 					v_width = v_height; 
 				}
 
-                v1 = graph.insertVertex(parent, nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);
+
+				if(nodeArray[node].name == "start" || nodeArray[node].name == "end"){
+					v1 = graph.insertVertex(parent, nodeArray[node].name, "", globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);
+				}else{
+					
+					swimlaneT = [graph.getModel().cells["secondSwim"],graph.getModel().cells["thirdSwim"]];
+
+					if(nodeArray[node].name == "Approve_PO"){
+						v1 = graph.insertVertex(swimlaneT[1], nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
+					}else{
+						v1 = graph.insertVertex(swimlaneT[0], nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
+					}
+					
+				}
+                
 
 				//TEST//
 				//graph.updateCellSize(v1);
@@ -251,16 +294,248 @@ function mainNew(data){
 
 function createGraph(container)
 	{
-		var graph = new mxGraph(container);
-		graph.setTooltips(true);
-		graph.setEnabled(false);
-		
-		// Disables folding
-		graph.isCellFoldable = function(cell, collapse)
-		{
-			return false;
-		};
 
+		var config = mxUtils.load(
+			'https://jgraph.github.io/mxgraph/javascript/examples/editors/config/keyhandler-commons.xml').
+				getDocumentElement();
+		var editor = new mxEditor(config);
+		editor.setGraphContainer(container);
+		graph = editor.graph;
+		var model = graph.getModel();
+	
+		// Auto-resizes the container
+		graph.border = 80;
+		graph.getView().translate = new mxPoint(graph.border/2, graph.border/2);
+		graph.setResizeContainer(true);
+		graph.graphHandler.setRemoveCellsFromParent(false);
+
+		var outline = document.getElementById("outline");
+		outln = new mxOutline(graph, outline);
+
+		    //style test//
+				// Changes the default vertex style in-place
+				var style = graph.getStylesheet().getDefaultVertexStyle();
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+				style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+				style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
+				style[mxConstants.STYLE_FONTSIZE] = 11;
+				style[mxConstants.STYLE_STARTSIZE] = 22;
+				style[mxConstants.STYLE_HORIZONTAL] = false;
+				style[mxConstants.STYLE_FONTCOLOR] = 'black';
+				style[mxConstants.STYLE_STROKECOLOR] = 'black';
+				delete style[mxConstants.STYLE_FILLCOLOR];
+
+				style = mxUtils.clone(style);
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+				style[mxConstants.STYLE_FONTSIZE] = 10;
+				style[mxConstants.STYLE_ROUNDED] = true;
+				style[mxConstants.STYLE_HORIZONTAL] = true;
+				style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+				delete style[mxConstants.STYLE_STARTSIZE];
+				style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'none';
+				graph.getStylesheet().putCellStyle('process', style);
+				
+				style = mxUtils.clone(style);
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
+				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+				delete style[mxConstants.STYLE_ROUNDED];
+				graph.getStylesheet().putCellStyle('state', style);
+												
+				style = mxUtils.clone(style);
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
+				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RhombusPerimeter;
+				style[mxConstants.STYLE_VERTICAL_ALIGN] = 'top';
+				style[mxConstants.STYLE_SPACING_TOP] = 40;
+				style[mxConstants.STYLE_SPACING_RIGHT] = 64;
+				graph.getStylesheet().putCellStyle('condition', style);
+								
+				style = mxUtils.clone(style);
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
+				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+				style[mxConstants.STYLE_SPACING_TOP] = 28;
+				style[mxConstants.STYLE_FONTSIZE] = 14;
+				style[mxConstants.STYLE_FONTSTYLE] = 1;
+				delete style[mxConstants.STYLE_SPACING_RIGHT];
+				graph.getStylesheet().putCellStyle('end', style);
+				
+				style = graph.getStylesheet().getDefaultEdgeStyle();
+				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+				style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_BLOCK;
+				style[mxConstants.STYLE_ROUNDED] = true;
+				style[mxConstants.STYLE_FONTCOLOR] = 'black';
+				style[mxConstants.STYLE_STROKECOLOR] = 'black';
+				
+				style = mxUtils.clone(style);
+				style[mxConstants.STYLE_DASHED] = true;
+				style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_OPEN;
+				style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_OVAL;
+				graph.getStylesheet().putCellStyle('crossover', style);
+						
+				// Installs double click on middle control point and
+				// changes style of edges between empty and this value
+				graph.alternateEdgeStyle = 'elbow=vertical';
+
+    //style test//
+
+
+    //other confifgs///
+				// Adds automatic layout and various switches if the
+				// graph is enabled
+				if (graph.isEnabled())
+				{
+					// Allows new connections but no dangling edges
+					graph.setConnectable(true);
+					graph.setAllowDanglingEdges(false);
+					
+					// End-states are no valid sources
+					var previousIsValidSource = graph.isValidSource;
+					
+					graph.isValidSource = function(cell)
+					{
+						if (previousIsValidSource.apply(this, arguments))
+						{
+							var style = this.getModel().getStyle(cell);
+							
+							return style == null || !(style == 'end' || style.indexOf('end') == 0);
+						}
+
+						return false;
+					};
+					
+					// Start-states are no valid targets, we do not
+					// perform a call to the superclass function because
+					// this would call isValidSource
+					// Note: All states are start states in
+					// the example below, so we use the state
+					// style below
+					graph.isValidTarget = function(cell)
+					{
+						var style = this.getModel().getStyle(cell);
+						
+						return !this.getModel().isEdge(cell) && !this.isSwimlane(cell) &&
+							(style == null || !(style == 'state' || style.indexOf('state') == 0));
+					};
+					
+					// Allows dropping cells into new lanes and
+					// lanes into new pools, but disallows dropping
+					// cells on edges to split edges
+					graph.setDropEnabled(true);
+					graph.setSplitEnabled(false);
+					
+					// Returns true for valid drop operations
+					graph.isValidDropTarget = function(target, cells, evt)
+					{
+						if (this.isSplitEnabled() && this.isSplitTarget(target, cells, evt))
+						{
+							return true;
+						}
+						
+						var model = this.getModel();
+						var lane = false;
+						var pool = false;
+						var cell = false;
+						
+						// Checks if any lanes or pools are selected
+						for (var i = 0; i < cells.length; i++)
+						{
+							var tmp = model.getParent(cells[i]);
+							lane = lane || this.isPool(tmp);
+							pool = pool || this.isPool(cells[i]);
+							
+							cell = cell || !(lane || pool);
+						}
+						
+						return !pool && cell != lane && ((lane && this.isPool(target)) ||
+							(cell && this.isPool(model.getParent(target))));
+					};
+					
+					// Adds new method for identifying a pool
+					graph.isPool = function(cell)
+					{
+						var model = this.getModel();
+						var parent = model.getParent(cell);
+					
+						return parent != null && model.getParent(parent) == model.getRoot();
+					};
+					
+					// Changes swimlane orientation while collapsed
+					graph.model.getStyle = function(cell)
+					{
+						var style = mxGraphModel.prototype.getStyle.apply(this, arguments);
+					
+						if (graph.isCellCollapsed(cell))
+						{
+							if (style != null)
+							{
+								style += ';';
+							}
+							else
+							{
+								style = '';
+							}
+							
+							style += 'horizontal=1;align=left;spacingLeft=14;';
+						}
+						
+						return style;
+					};
+
+					// Keeps widths on collapse/expand					
+					var foldingHandler = function(sender, evt)
+					{
+						var cells = evt.getProperty('cells');
+						
+						for (var i = 0; i < cells.length; i++)
+						{
+							var geo = graph.model.getGeometry(cells[i]);
+
+							if (geo.alternateBounds != null)
+							{
+								geo.width = geo.alternateBounds.width;
+							}
+						}
+					};
+
+					graph.addListener(mxEvent.FOLD_CELLS, foldingHandler);
+				}
+				
+				// Applies size changes to siblings and parents
+				new mxSwimlaneManager(graph);
+
+				// Creates a stack depending on the orientation of the swimlane
+				var layout = new mxStackLayout(graph, false);
+				
+				// Makes sure all children fit into the parent swimlane
+				layout.resizeParent = true;
+							
+				// Applies the size to children if parent size changes
+				layout.fill = true;
+
+				// Only update the size of swimlanes
+				layout.isVertexIgnored = function(vertex)
+				{
+					return !graph.isSwimlane(vertex);
+				}
+				
+				// Keeps the lanes and pools stacked
+				var layoutMgr = new mxLayoutManager(graph);
+
+				layoutMgr.getLayout = function(cell)
+				{
+					if (!model.isEdge(cell) && graph.getModel().getChildCount(cell) > 0 &&
+						(model.getParent(cell) == model.getRoot() || graph.isPool(cell)))
+					{
+						layout.fill = graph.isPool(cell);
+						
+						return layout;
+					}
+					
+					return null;
+				};
+
+	//other configs///
+	
+/*
 		// Creates the stylesheet for the process display
 		var style = graph.getStylesheet().getDefaultVertexStyle();
 		style[mxConstants.STYLE_FONTSIZE] = 11;
@@ -272,10 +547,7 @@ function createGraph(container)
 		style[mxConstants.STYLE_ROUNDED] = true;
 		style[mxConstants.STYLE_SHADOW] = true;
 		style[mxConstants.STYLE_FONTSTYLE] = 1;
-
-		
-		
-						
+					
 		style = [];
 		style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
 		style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -323,6 +595,7 @@ function createGraph(container)
 		style[mxConstants.STYLE_FILLCOLOR] = '#DACCBC';
 		style[mxConstants.STYLE_STROKECOLOR] = '#AF7F73';
 		graph.getStylesheet().putCellStyle('end', style);
+*/		
 		
 		return graph;
 	};
