@@ -1,6 +1,20 @@
 var graph;
 var outln;
 
+var configNames = {
+	"Approve_PO": "Approve Process",
+	"Create_PO": "Create Process",
+	"Send_PO": "Send Process"
+};
+
+var configLanes = {
+	"start": "Process Manager",
+	"end": "Process Manager",
+	"Approve_PO": "Process Co-ordinator",
+	"Create_PO": "Process Manager",
+	"Send_PO": "Process Manager"
+};
+
 function zoomIn(){
 	graph.zoomIn();
 }
@@ -14,114 +28,6 @@ function zoomFit(){
 	// $("#flowChartSVG").css("height",$("#flowChartScroll").css("height"));
 	graph.fit();
 }
-
-function main(flowChartJSON){
-
-	console.log("makekaka");
-	console.log(flowChartJSON);
-	flowChartJSON[flowChartJSON.length] = {"name":"end","child":[]};
-	console.log("makekaka");
-
-	flowChartJSON = {
-		"Approve_PO": ["What is the process to check before approval?:test", "Who does this task?:test"],
-		"Create_PO":["How the PO was completed?:Automated", "Who will approve the PO?:test", "Who will prepare the PO?:test"],
-		"Send_PO":["How do you send PO?:Mail", "Who send the PO to Vendor?:test"]
-	};
-
-
-	//construct the data//
-
-	//construct the data//
-
-	console.log("MAKE:  ");
-	console.log(flowChartJSON);
-	console.log("MAKE: ");
-	// Checks if the browser is supported
-	container = document.getElementById("flowChartSVG");
-	$("#textData").css("display","none");
-	$("#flowChart").css("display","block");
-	$(".nextQuestion").css("display","none");
-	$(".questionGroup").css("display","none");
-	
-
-	if (!mxClient.isBrowserSupported())
-	{
-		// Displays an error message if the browser is not supported.
-		mxUtils.error('Browser is not supported!', 200, false);
-	}
-	else
-	{
-		/// Disables the built-in context menu
-		//mxEvent.disableContextMenu(container);
-		
-		// Creates the graph inside the given container
-		graph = createGraph(container);
-
-
-		// Enables rubberband selection
-		new mxRubberband(graph);
-		
-
-
-		//////////makesh collapse //////////
-
-		/////////makesh collapase /////////
-
-
-
-
-		// Gets the default parent for inserting new cells. This
-		// is normally the first child of the root (ie. layer 0).
-		var parent = graph.getDefaultParent();
-						
-		// Adds cells to the model in a single step
-		graph.getModel().beginUpdate();
-
-		//Adding the start and end node
-
-
-
-		try
-		{
-			//Draw Vertex//
-			// for(var obj in flowChartJSON){
-			// 	//  if( flowChartJSON.hasOwnProperty(obj) ) {
-			// 		var datalist = flowChartJSON[obj];
-			// 			var v3 = graph.insertVertex(parent, null, obj , ((vertextCount*150)+((vertextCount-1)*50)) , 135, 120, 80);
-						
-			// 			graph.insertVertex(parent, null, obj , ((vertextCount*150)+((vertextCount-1)*50)) , vertextCount*135, 120, 80);
-
-
-
-			// 		// }
-			// 		vertexArray.push(v3);
-			// 		vertextCount++;
-					
-			// }
-			//Draw Vertex//
-
-			//Draw edge//
-			// for(intr = 2; intr < vertexArray.length; intr++){
-			// 	if(intr == 2){
-			// 		var e1 = graph.insertEdge(parent, null, '', vertexArray[0], vertexArray[2]);
-			// 		continue;
-			// 	}
-			// 	if(intr == vertexArray.length-1){
-			// 		var e1 = graph.insertEdge(parent, null, '', vertexArray[vertexArray.length-1], vertexArray[1]);
-			// 	}
-			// 	var e1 = graph.insertEdge(parent, null, '', vertexArray[intr-1], vertexArray[intr]);
-			// }
-			//Draw edge//
-
-		}
-		finally
-		{
-			// Updates the display
-			graph.getModel().endUpdate();
-		}
-	}
-};
-
 
 
 function mainNew(data){
@@ -154,9 +60,24 @@ function mainNew(data){
 	
 
 	//swimlanes//
-	graph.insertVertex(parent, "firstSwim", "first", 0,0, 1000, 1000,'shape=swimlane;');
-    graph.insertVertex(graph.getModel().cells["firstSwim"], "secondSwim", "second", 0,0, 250, 500,'shape=swimlane;');
-    graph.insertVertex(graph.getModel().cells["firstSwim"], "thirdSwim", "third", 0,500, 250, 500,'shape=swimlane;');
+	graph.insertVertex(parent, "process", "Process", 0,0, 500, 500,'shape=swimlane;');
+
+	//graph.insertVertex(graph.getModel().cells["process"], "others", "others", 0,0, 250, 250,'shape=swimlane;');
+
+	for(var iter=0;iter < data.length;iter++){
+
+		if(graph.getModel().cells[configLanes[data[iter].name]] == undefined ){
+
+			//if(data[iter].name != "start" && data[iter].name != "end"){
+				graph.insertVertex(graph.getModel().cells["process"], configLanes[data[iter].name], configLanes[data[iter].name], 0,0, 250, 250,'shape=swimlane;');
+				console.log("DEBUG: "+configLanes[data[iter].name]);
+			//}
+		}
+
+	}
+
+    //graph.insertVertex(graph.getModel().cells["firstSwim"], "secondSwim", "Process Coordinator", 0,0, 250, 250,'shape=swimlane;');
+    //graph.insertVertex(graph.getModel().cells["firstSwim"], "thirdSwim", "Process Manager", 0,100, 250, 250,'shape=swimlane;');
 	//swimlanes//
 
     nodesForEdge = [];
@@ -165,7 +86,17 @@ function mainNew(data){
 
         for(node in nodeArray){
             //draw the node
-            console.log(nodeArray[node]["hide"]+" -- -- --"+nodeArray[node]["name"]);
+			console.log(nodeArray[node]["ques"]+" -- -- --"+nodeArray[node]["ans"]);
+			
+
+			//update swimlane text//
+			//graph.getModel().cells["firstSwim"].value = "makesh kumar"
+			// if(nodeArray[node]["ques"] != null && nodeArray[node]["ques"] != undefined && nodeArray[node]["ques"].startsWith("Who")){
+			// 	console.log("This is happendning");
+			// 	graph.getModel().cells[nodeArray[node]["lane"]].value = nodeArray[node]["ans"];
+			// }
+			//update swimlane text//
+
             if(nodeArray[node]["hide"] == undefined){
 				console.log(nodeArray[node].name+"-- ("+globalX+" : "+depth+")");
 				
@@ -181,19 +112,23 @@ function mainNew(data){
 				}
 
 
-				if(nodeArray[node].name == "start" || nodeArray[node].name == "end"){
-					v1 = graph.insertVertex(parent, nodeArray[node].name, "", globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);
-				}else{
+				// if(nodeArray[node].name == "start" || nodeArray[node].name == "end"){
+				// 	v1 = graph.insertVertex(parent, nodeArray[node].name, "", globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);
+				// }else{
 					
-					swimlaneT = [graph.getModel().cells["secondSwim"],graph.getModel().cells["thirdSwim"]];
+					//swimlaneT = [graph.getModel().cells["secondSwim"],graph.getModel().cells["thirdSwim"]];
 
-					if(nodeArray[node].name == "Approve_PO"){
-						v1 = graph.insertVertex(swimlaneT[1], nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
-					}else{
-						v1 = graph.insertVertex(swimlaneT[0], nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
-					}
+
+					//if(nodeArray[node].lane == "Approve_PO"){
+
+						vertexName = (configNames[nodeArray[node].name] == undefined)?nodeArray[node].name : configNames[nodeArray[node].name];
+
+						v1 = graph.insertVertex(graph.getModel().cells[configLanes[nodeArray[node].lane]], nodeArray[node].name, vertexName, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
+					//}else{
+					//	v1 = graph.insertVertex(swimlaneT[0], nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
+					//}
 					
-				}
+				// }
                 
 
 				//TEST//
@@ -303,6 +238,7 @@ function createGraph(container)
 		graph = editor.graph;
 		var model = graph.getModel();
 	
+
 		// Auto-resizes the container
 		graph.border = 80;
 		graph.getView().translate = new mxPoint(graph.border/2, graph.border/2);
@@ -340,6 +276,16 @@ function createGraph(container)
 				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
 				delete style[mxConstants.STYLE_ROUNDED];
 				graph.getStylesheet().putCellStyle('state', style);
+
+
+				style = mxUtils.clone(style);
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
+				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+				//style[mxConstants.STYLE_SPACING_TOP] = 28;
+				//style[mxConstants.STYLE_FONTSIZE] = 14;
+				//style[mxConstants.STYLE_FONTSTYLE] = 1;
+				//delete style[mxConstants.STYLE_SPACING_RIGHT];
+				graph.getStylesheet().putCellStyle('end', style);
 												
 				style = mxUtils.clone(style);
 				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
@@ -349,14 +295,7 @@ function createGraph(container)
 				style[mxConstants.STYLE_SPACING_RIGHT] = 64;
 				graph.getStylesheet().putCellStyle('condition', style);
 								
-				style = mxUtils.clone(style);
-				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
-				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-				style[mxConstants.STYLE_SPACING_TOP] = 28;
-				style[mxConstants.STYLE_FONTSIZE] = 14;
-				style[mxConstants.STYLE_FONTSTYLE] = 1;
-				delete style[mxConstants.STYLE_SPACING_RIGHT];
-				graph.getStylesheet().putCellStyle('end', style);
+
 				
 				style = graph.getStylesheet().getDefaultEdgeStyle();
 				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;

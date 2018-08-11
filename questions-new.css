@@ -84,7 +84,7 @@
     margin: 0 auto;
 }
 
-#controls .input_small .options{
+#controls .input_small .options, #controls .input_small .w3-input{
     text-align: center;
 }
 

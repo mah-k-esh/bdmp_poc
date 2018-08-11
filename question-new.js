@@ -1,6 +1,6 @@
 var data = {};
 
-var init = {"query": "start tax process","context":"","flowchart_data" : [{"name":"start","child":[]}],"context_type" : "","tempData":{}};
+var init = {"query": "start tax process","context":"","flowchart_data" : [{"name":"start","lane":"start","child":[]}],"context_type" : "","tempData":{}};
 
 var currentType = "";
 
@@ -62,13 +62,18 @@ function nextQuestion(){
 
     //Construct JSON for Flowchat
     var ques = $("#controls .question #questionText").html() ;
-    var quesAns = ques + ":" +  init.query;
+    var ans = init.query;
+    var quesAns = ques + ":\n" +  init.query;
     var contextType = init.context_type ;
 
 
     var node = {
         "name": contextType,
-        "child": []
+        "child": [],
+        "lane": contextType,
+        "collapse": true,
+        "ques": ques,
+        "ans": ans
     };
 
 
@@ -76,7 +81,12 @@ function nextQuestion(){
         
         var childNode = {
             "name": quesAns,
-            "child": []
+            "child": [],
+            "lane": contextType,
+            "collapse": true,
+            "hide": true,
+            "ques": ques,
+            "ans": ans
         };
 
         //here im adding each node as child of previous node
@@ -141,7 +151,7 @@ function initialize(){
                     $("#flowChartSVG").html('');
                     $("#flowChartSVG").css('overflow:hidden;position:relative;width:600px;height:300px;cursor:default;');
 
-                    init.flowchart_data[init.flowchart_data.length] = {"name":"end","child":[]};
+                    init.flowchart_data[init.flowchart_data.length] = {"name":"end","lane":"end","child":[]};
 
                     mainNew(init.flowchart_data);
                 }
