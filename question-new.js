@@ -99,6 +99,18 @@ function nextQuestion(){
         trav["child"][trav["child"].length] = childNode;
     }
     else{
+
+        var childNode = {
+            "name": quesAns,
+            "child": [],
+            "lane": contextType,
+            "collapse": true,
+            "hide": true,
+            "ques": ques,
+            "ans": ans
+        };
+        node["child"][0] = childNode;
+
         init.flowchart_data[init.flowchart_data.length] = node;
         init.tempData[contextType] = node;
     }
