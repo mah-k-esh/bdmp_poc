@@ -101,10 +101,10 @@ function mainNew(data){
 
 			//update swimlane text//
 			//graph.getModel().cells["firstSwim"].value = "makesh kumar"
-			// if(nodeArray[node]["ques"] != null && nodeArray[node]["ques"] != undefined && nodeArray[node]["ques"].startsWith("Who")){
-			// 	console.log("This is happendning");
-			// 	graph.getModel().cells[nodeArray[node]["lane"]].value = nodeArray[node]["ans"];
-			// }
+			if(nodeArray[node]["ques"] != null && nodeArray[node]["ques"] != undefined && nodeArray[node]["ques"].startsWith("Who")){
+				console.log("This is happendning");
+				graph.getModel().cells[configLanes[nodeArray[node]["lane"]]].value = nodeArray[node]["ans"];
+			}
 			//update swimlane text//
 
             if(nodeArray[node]["hide"] == undefined){
