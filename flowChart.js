@@ -15,6 +15,16 @@ var configLanes = {
 	"Send_PO": "Process Manager"
 };
 
+var configSwimLanesStyle = {
+
+};
+
+var configVertexStyle= {
+	"Approve_PO": ";fillColor=#629fed66",
+	"Create_PO": ";fillColor=#c6da5652",
+	"Send_PO": ";fillColor=#c716b238"	
+};
+
 function zoomIn(){
 	graph.zoomIn();
 }
@@ -122,8 +132,8 @@ function mainNew(data){
 					//if(nodeArray[node].lane == "Approve_PO"){
 
 						vertexName = (configNames[nodeArray[node].name] == undefined)?nodeArray[node].name : configNames[nodeArray[node].name];
-
-						v1 = graph.insertVertex(graph.getModel().cells[configLanes[nodeArray[node].lane]], nodeArray[node].name, vertexName, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
+						vertexStyle = (configVertexStyle[nodeArray[node].lane] == undefined) ? "": configVertexStyle[nodeArray[node].lane];
+						v1 = graph.insertVertex(graph.getModel().cells[configLanes[nodeArray[node].lane]], nodeArray[node].name, vertexName, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle+vertexStyle);					
 					//}else{
 					//	v1 = graph.insertVertex(swimlaneT[0], nodeArray[node].name, nodeArray[node].name, globalX*t_width*1.5, depth*t_height*2, v_width, v_height,nodeStyle);					
 					//}
