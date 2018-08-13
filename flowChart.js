@@ -2,17 +2,17 @@ var graph;
 var outln;
 
 var configNames = {
-	"Approve_PO": "Approve Process",
-	"Create_PO": "Create Process",
-	"Send_PO": "Send Process"
+	"Approve_PO": "Approve Purchase Order",
+	"Create_PO": "Create Purchase Order",
+	"Send_PO": "Send Purchase Order"
 };
 
 var configLanes = {
-	"start": "Process Manager",
-	"end": "Process Manager",
-	"Approve_PO": "Process Co-ordinator",
-	"Create_PO": "Process Manager",
-	"Send_PO": "Process Manager"
+	"start": "Purchasing Manager",
+	"end": "Purchasing Manager",
+	"Approve_PO": "Purchasing Manager",
+	"Create_PO": "Purchasing Coordinator",
+	"Send_PO": "Purchasing Coordinator"
 };
 
 var configSwimLanesStyle = {
@@ -143,7 +143,7 @@ function mainNew(data){
 	
 
 	//swimlanes//
-	graph.insertVertex(parent, "process", "Process", 0,0, 500, 500,'shape=swimlane;');
+	graph.insertVertex(parent, "process", "Purchase Order Process", 0,0, 500, 500,'shape=swimlane;');
 
 	//graph.insertVertex(graph.getModel().cells["process"], "others", "others", 0,0, 250, 250,'shape=swimlane;');
 
